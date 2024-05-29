@@ -1,5 +1,6 @@
 import './App.css';
 import HomePage from './pages/HomePage';
+import NavBar from './NavBar';
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import AboutPage from './pages/AboutPage';
 import ArticleListPage from './pages/ArticleListPage';
@@ -9,6 +10,7 @@ function App() {
   return (
     <BrowserRouter>
     <div className="App">
+      <NavBar/>
       <div id='page-body'>
         <Routes>
           <Route path='/' element={<HomePage/>}/>
