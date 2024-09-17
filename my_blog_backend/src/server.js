@@ -1,4 +1,5 @@
 import express from 'express';
+import {db, connectToDB} from './db.js'
 import { MongoClient } from 'mongodb';
 
 const app = express();
@@ -16,10 +17,7 @@ app.get('/api/articles/:name', async (req,res) => {
     const {name} = req.params
 
     const client = new MongoClient('mongodb://127.0.0.1:27017')
-
     await client.connect()
-
-    const db = client.db('react_blog_db') //use react_blog_db
 
     const article = await db.collection('articles').findOne({ name })
 
@@ -36,10 +34,9 @@ app.put('/api/articles/:name/upvote', async (req,res) => {
     const {name} = req.params
     
     const client = new MongoClient('mongodb://127.0.0.1:27017')
-
     await client.connect()
 
-    const db = client.db('react_blog_db') //use react_blog_db
+    const db = client.db('react-blog-db')
     await db.collection('articles').updateOne({name}, {
         $inc: {upvotes: 1},
     })
@@ -53,10 +50,16 @@ app.put('/api/articles/:name/upvote', async (req,res) => {
     }
 })
 
-app.post('/api/articles/:name/comments', (req, res) => {
+app.post('/api/articles/:name/comments', async (req, res) => {
     const {name} = req.params
     const {postedBy, text} = req.body
     
+    
+
+    await db.collection('articles').updateOne({name}, {
+        $push: {comments: {postedBy, text}}
+    })
+    const article = await db.collection('articles').findOne({name})
 
     if (article) {
         res.send(article.comments)
@@ -66,6 +69,9 @@ app.post('/api/articles/:name/comments', (req, res) => {
 
 })
 
-app.listen(8000, () => {
-    console.log('server is working on port 8000');
+connectToDB(() => {
+    console.log('Connected to database successfully')
+    app.listen(8000, () => {
+        console.log('server is working on port 8000');
+    })
 })

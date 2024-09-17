@@ -6,6 +6,7 @@ import AboutPage from './pages/AboutPage';
 import ArticleListPage from './pages/ArticleListPage';
 import ArticlePage from './pages/ArticlePage';
 import NotFoundPage from './pages/NotFoundPage';
+import axios from 'axios';
 
 function App() {
   return (
@@ -28,3 +29,4 @@ function App() {
 }
 
 export default App;
+

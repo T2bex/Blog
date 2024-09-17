@@ -1,0 +1,16 @@
+import { MongoClient } from 'mongodb';
+let db
+
+async function connectToDB(cb){
+    const client = new MongoClient('mongodb://127.0.0.1:27017')
+
+    await client.connect()
+
+    db = client.db('react_blog_db') //use react_blog_db
+    cb()
+}
+
+export{
+    db,
+    connectToDB
+}
